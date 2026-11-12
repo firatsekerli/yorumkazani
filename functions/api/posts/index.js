@@ -66,10 +66,16 @@ export async function onRequestPost({ request, env, waitUntil }) {
   const id = newId();
   const now = Date.now();
   await env.IMAGES.put(`p/${id}.jpg`, buf); // Workers KV
-  await env.DB.prepare(
-    `INSERT INTO posts (id, created_at, author_hash, nick, category, question, image_key, width, height, status, last_activity, mod_note)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-  ).bind(id, now, v.hash, nick, category, question, `p/${id}.jpg`, width, height, status, now, note.slice(0, 200)).run();
+  const cols = "id, created_at, author_hash, nick, category, question, image_key, width, height, status, last_activity";
+  const vals = [id, now, v.hash, nick, category, question, `p/${id}.jpg`, width, height, status, now];
+  try {
+    await env.DB.prepare(`INSERT INTO posts (${cols}, mod_note) VALUES (${vals.map(() => "?").join(", ")}, ?)`)
+      .bind(...vals, note.slice(0, 200)).run();
+  } catch (e) {
+    // If the mod_note column could not be added for some reason, still save the post.
+    if (!/mod_note/.test(String(e && e.message))) throw e;
+    await env.DB.prepare(`INSERT INTO posts (${cols}) VALUES (${vals.map(() => "?").join(", ")})`).bind(...vals).run();
+  }
 
   waitUntil(purgeStale(env).catch(() => {}));
   return done(json({ ok: true, id, status }));
