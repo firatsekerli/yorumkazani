@@ -1,20 +1,8 @@
 import { $, api, getNick, setNick, turnstile, prepareImage } from "/common.js";
 
-const sheet = $("#sheet");
-let ts = null, photo = null;
-
-function openSheet() {
-  sheet.hidden = false;
-  document.body.style.overflow = "hidden";
-  $("#nick").value = getNick();
-  if (!ts) ts = turnstile("#uploadTs");
-}
-function closeSheet() { sheet.hidden = true; document.body.style.overflow = ""; }
-
-document.querySelectorAll("[data-open-upload]").forEach((b) => b.addEventListener("click", openSheet));
-$("#sheetClose").addEventListener("click", closeSheet);
-sheet.addEventListener("click", (e) => { if (e.target === sheet) closeSheet(); });
-if (new URLSearchParams(location.search).has("yukle")) openSheet();
+let photo = null;
+const ts = turnstile("#uploadTs");
+$("#nick").value = getNick();
 
 $("#file").addEventListener("change", async (e) => {
   const f = e.target.files && e.target.files[0];

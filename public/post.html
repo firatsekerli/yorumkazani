@@ -13,15 +13,11 @@
   <link rel="stylesheet" href="/style.css">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
-<body>
-  <header class="top">
-    <div class="top-in">
-      <a class="brand" href="/" aria-label="Yorum Kazanı ana sayfa">
-        <img src="/brand/icon-256.png" alt="" width="40" height="40">
-        <span><span class="y">YORUM</span><span class="k">KAZANI</span></span>
-      </a>
-      <div class="spacer"></div>
-      <a class="btn btn-red" href="/?yukle=1">+ Kazana at</a>
+<body class="page">
+  <header class="site-head">
+    <div class="site-head-in">
+      <a href="/" class="site-logo" aria-label="Yorum Kazanı ana sayfa"><img src="/brand/logo-480.png" alt="Yorum Kazanı" width="120" height="82"></a>
+      <p class="site-slogan">En komik yorum kazanır.</p>
     </div>
   </header>
 
@@ -62,9 +58,12 @@
     </section>
   </main>
 
-  <footer class="foot">
-    Burada şeylere gülüyoruz, insanlara değil. Kurallara uymayan içerikleri bildir.<br>
-    Bir <a href="https://asparajans.com" rel="noopener">asparajans</a> projesi.
+  <footer class="site-foot">
+    <div class="site-foot-in">
+      <span>© 2026 Yorum Kazanı</span>
+      <a href="/">Sen de kazana at</a>
+      <span>Bir <a href="https://asparajans.com" rel="noopener">asparajans</a> projesi</span>
+    </div>
   </footer>
 
   <script type="module" src="/post.js"></script>

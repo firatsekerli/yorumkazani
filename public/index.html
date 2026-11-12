@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Yorum Kazanı · Fotoğrafını at, millet yorumlasın</title>
-  <meta name="description" content="Fotoğrafını kazana at, millet yorumlasın. En iyi yorum kazanır.">
+  <meta name="description" content="Fotoğrafını kazana at, millet yorumlasın. En komik yorum kazanır.">
   <meta property="og:title" content="Yorum Kazanı">
-  <meta property="og:description" content="Fotoğrafını kazana at, millet yorumlasın. En iyi yorum kazanır.">
+  <meta property="og:description" content="Fotoğrafını kazana at, millet yorumlasın. En komik yorum kazanır.">
   <meta property="og:image" content="/brand/logo.png">
   <meta name="theme-color" content="#f13e3a">
   <!-- Turnstile site key (public) -->
@@ -16,34 +16,23 @@
   <link rel="preload" href="/fonts/bangers-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/fonts/fonts.css">
   <link rel="stylesheet" href="/style.css">
-  <style>
-    .simple { min-height: 100vh; display: grid; place-items: center; text-align: center; padding: 32px 16px; }
-    .simple-in { max-width: 460px; }
-    .simple img.logo { width: 220px; height: auto; margin: 0 auto 18px; }
-    .simple h1 { font-family: var(--display); font-weight: 400; letter-spacing: .02em; font-size: 44px; line-height: 1.05; margin: 0 0 12px; color: var(--ink-strong); }
-    .simple p { font-size: 18px; font-weight: 700; color: var(--muted); margin: 0 0 26px; line-height: 1.5; }
-    .simple .btn { font-size: 20px; padding: 15px 34px; }
-    .simple small { display: block; margin-top: 28px; color: var(--muted); font-weight: 600; }
-  </style>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
-<body>
-  <main class="simple">
-    <div class="simple-in">
-      <img class="logo" src="/brand/logo-480.png" alt="Yorum Kazanı" width="220" height="150">
-      <h1>Fotoğrafını at, millet yorumlasın.</h1>
-      <p>Kombin, ev, yemek, mesaj ya da garip bir tabela.<br>Kazana at, en komik yorum kazansın.</p>
-      <button class="btn btn-red" data-open-upload>Kazana at</button>
-      <small>Bir <a href="https://asparajans.com" rel="noopener">asparajans</a> projesi.</small>
+<body class="page">
+  <header class="site-head">
+    <div class="site-head-in">
+      <a href="/" class="site-logo" aria-label="Yorum Kazanı ana sayfa"><img src="/brand/logo-480.png" alt="Yorum Kazanı" width="120" height="82"></a>
+      <p class="site-slogan">En komik yorum kazanır.</p>
     </div>
-  </main>
+  </header>
 
-  <!-- upload sheet -->
-  <div class="sheet-bg" id="sheet" hidden>
-    <form class="sheet" id="uploadForm" novalidate>
-      <button type="button" class="sheet-close" id="sheetClose" aria-label="Kapat">×</button>
-      <h2>Kazana at</h2>
+  <main class="home">
+    <section class="home-text">
+      <h1>Fotoğrafını at,<br><em>millet yorumlasın.</em></h1>
+      <p>Kombin, ev, yemek, mesaj ya da garip bir tabela. Ne varsa kazana at, millet yorumlasın, en komik yorum kazansın.</p>
+    </section>
 
+    <form class="upload-card" id="uploadForm" novalidate>
       <label class="drop" id="drop">
         <input type="file" id="file" accept="image/*" hidden>
         <img id="preview" alt="Seçilen fotoğraf" hidden>
@@ -66,7 +55,15 @@
       <p class="error" id="uploadError" hidden></p>
       <button class="btn btn-red btn-big" id="uploadBtn" type="submit" disabled style="margin-top:14px">Kazana at!</button>
     </form>
-  </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="site-foot-in">
+      <span>© 2026 Yorum Kazanı</span>
+      <span>Burada şeylere gülüyoruz, insanlara değil.</span>
+      <span>Bir <a href="https://asparajans.com" rel="noopener">asparajans</a> projesi</span>
+    </div>
+  </footer>
 
   <script type="module" src="/home.js"></script>
 </body>
