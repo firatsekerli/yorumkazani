@@ -9,29 +9,67 @@
   <link rel="preload" href="/fonts/bangers-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/fonts/fonts.css">
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/admin.css">
 </head>
-<body>
-  <main class="post-wrap">
-    <h1 class="post-q">Yönetim</h1>
-
-    <form id="login" class="compose">
-      <div class="field" style="margin-top:0">
-        <label for="token">Yönetici anahtarı (ADMIN_TOKEN)</label>
-        <input id="token" type="password" autocomplete="current-password">
+<body class="page admin">
+  <header class="site-head">
+    <div class="site-head-in">
+      <a href="/" class="site-logo" aria-label="Yorum Kazanı ana sayfa"><img src="/brand/logo-480.png" alt="Yorum Kazanı" width="120" height="82"></a>
+      <div class="admin-head-right">
+        <span class="admin-badge">Yönetim</span>
+        <button class="btn btn-ghost" id="refresh" hidden>Yenile</button>
+        <button class="btn btn-ghost" id="logout" hidden>Çıkış</button>
       </div>
-      <button class="btn btn-red" style="margin-top:10px">Giriş</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <form id="login" class="admin-login">
+      <h1>Yönetim girişi</h1>
+      <div class="field">
+        <label for="token">Yönetici anahtarı</label>
+        <input id="token" type="password" autocomplete="current-password" placeholder="ADMIN_TOKEN">
+      </div>
+      <button class="btn btn-red btn-big" style="margin-top:14px">Giriş yap</button>
       <p class="error" id="loginError" hidden></p>
     </form>
 
     <div id="panel" hidden>
-      <div class="stat-row" id="stats"></div>
-      <h2 class="section-title">Fotoğraflar</h2>
-      <div id="posts"></div>
-      <h2 class="section-title">Yorumlar</h2>
-      <div id="comments"></div>
-      <button class="link-btn" id="logout">Çıkış</button>
+      <section class="stats" id="stats"></section>
+
+      <nav class="admin-tabs" id="tabs" role="tablist">
+        <button class="admin-tab" data-tab="queue" role="tab">İncelenecek <span class="count" id="c-queue">0</span></button>
+        <button class="admin-tab" data-tab="live" role="tab">Fotoğraflar <span class="count" id="c-live">0</span></button>
+        <button class="admin-tab" data-tab="comments" role="tab">Yorumlar <span class="count" id="c-comments">0</span></button>
+      </nav>
+
+      <section class="tab-panel" id="tab-queue">
+        <h2 class="panel-title">Onay bekleyen ve bildirilen fotoğraflar</h2>
+        <div class="list" id="queuePosts"></div>
+        <h2 class="panel-title">Gizlenen ve bildirilen yorumlar</h2>
+        <div class="list" id="queueComments"></div>
+      </section>
+
+      <section class="tab-panel" id="tab-live" hidden>
+        <h2 class="panel-title">Son yayınlanan fotoğraflar</h2>
+        <div class="grid-admin" id="livePosts"></div>
+      </section>
+
+      <section class="tab-panel" id="tab-comments" hidden>
+        <h2 class="panel-title">Son yorumlar</h2>
+        <div class="list" id="liveComments"></div>
+      </section>
     </div>
   </main>
+
+  <div class="lightbox" id="lightbox" hidden><img alt=""></div>
+
+  <footer class="site-foot">
+    <div class="site-foot-in">
+      <span>© 2026 Yorum Kazanı</span>
+      <span>Bir <a href="https://asparajans.com" rel="noopener">asparajans.com</a> projesidir.</span>
+    </div>
+  </footer>
   <script type="module" src="/admin.js"></script>
 </body>
 </html>

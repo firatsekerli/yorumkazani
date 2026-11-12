@@ -16,6 +16,13 @@ export async function onRequestGet({ request, env }) {
      WHERE c.status = 'hidden' OR c.report_count > 0
      ORDER BY CASE c.status WHEN 'hidden' THEN 0 ELSE 1 END, c.created_at DESC LIMIT 200`
   ).all();
+  const { results: livePosts } = await env.DB.prepare(
+    `SELECT * FROM posts WHERE status = 'live' ORDER BY created_at DESC LIMIT 60`
+  ).all();
+  const { results: liveComments } = await env.DB.prepare(
+    `SELECT c.*, p.question AS post_question FROM comments c LEFT JOIN posts p ON p.id = c.post_id
+     WHERE c.status = 'live' ORDER BY c.created_at DESC LIMIT 100`
+  ).all();
   const stats = await env.DB.prepare(
     `SELECT (SELECT COUNT(*) FROM posts WHERE status='live') AS live_posts,
             (SELECT COUNT(*) FROM comments WHERE status='live') AS live_comments,
@@ -23,14 +30,18 @@ export async function onRequestGet({ request, env }) {
             (SELECT COUNT(*) FROM comments WHERE created_at > ?) AS comments_24h`
   ).bind(Date.now() - 864e5, Date.now() - 864e5).first();
 
+  const mapPost = (p) => ({ ...publicPost(p), reportCount: p.report_count });
+  const mapComment = (c) => ({
+    id: c.id, postId: c.post_id, postQuestion: c.post_question, nick: c.nick, body: c.body,
+    status: c.status, score: c.score, reportCount: c.report_count, createdAt: c.created_at,
+  });
   return json({
     ok: true,
     stats,
-    posts: posts.map((p) => ({ ...publicPost(p), reportCount: p.report_count })),
-    comments: comments.map((c) => ({
-      id: c.id, postId: c.post_id, postQuestion: c.post_question, nick: c.nick, body: c.body,
-      status: c.status, score: c.score, reportCount: c.report_count, createdAt: c.created_at,
-    })),
+    posts: posts.map(mapPost),            // pending / hidden / reported
+    comments: comments.map(mapComment),   // hidden / reported
+    livePosts: livePosts.map(mapPost),
+    liveComments: liveComments.map(mapComment),
   });
 }
 
