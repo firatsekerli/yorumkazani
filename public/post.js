@@ -154,6 +154,7 @@ async function drawCard() {
   const img = await new Promise((r, j) => { const i = new Image(); i.onload = () => r(i); i.onerror = j; i.src = post.image; });
   const s = Math.min((W - P * 2) / img.width, photoMax / img.height);
   const pw = img.width * s, ph = img.height * s, px = (W - pw) / 2;
+  y += Math.max(0, (photoMax - ph) / 2); // center the block when the photo is wide
   ctx.save(); round(ctx, px, y, pw, ph, 36); ctx.clip(); ctx.drawImage(img, px, y, pw, ph); ctx.restore();
   y += ph + 40;
 
