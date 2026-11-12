@@ -15,7 +15,7 @@ CLAUDE_MODEL = "claude-haiku-5-5"
 [[d1_databases]]
 binding = "DB"
 database_name = "yorumkazani"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "8d7ddb72-c8a4-49b5-8659-13b40ae26c73"
 
 # npx wrangler r2 bucket create yorumkazani-images
 [[r2_buckets]]
