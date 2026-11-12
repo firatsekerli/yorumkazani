@@ -6,7 +6,7 @@ export async function onRequestGet({ params, request, env }) {
   let html = await page.text();
 
   const post = /^[a-z2-9]{8}$/.test(params.id)
-    ? await env.DB.prepare("SELECT id, question, nick, status, comment_count FROM posts WHERE id = ?").bind(params.id).first()
+    ? await env.DB.prepare("SELECT id, question, nick, status, comment_count, width, height, created_at FROM posts WHERE id = ?").bind(params.id).first()
     : null;
 
   if (post && post.status === "live") {
@@ -23,6 +23,27 @@ export async function onRequestGet({ params, request, env }) {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="${origin}/p/${post.id}">`;
     html = html.replace(/<title>[^<]*<\/title>/, tags);
+
+    // Render the photo card on the server so the page doesn't jump while the script loads.
+    const label = post.question || `${post.nick} kazana attı`;
+    const size = post.width && post.height ? ` width="${post.width}" height="${post.height}"` : "";
+    html = html
+      .replace('<article class="post-card" id="post" hidden>', '<article class="post-card" id="post">')
+      .replace('<img id="photo" alt="">', `<img id="photo" src="/i/${post.id}.jpg" alt="${esc(label)}"${size} fetchpriority="high">`)
+      .replace('<h1 class="post-q" id="question"></h1>', `<h1 class="post-q" id="question">${esc(label)}</h1>`)
+      .replace('<div class="meta" id="meta"></div>', `<div class="meta" id="meta"><span>${esc(post.nick)}</span></div>`)
+      .replace('<section id="commentsSection" hidden>', '<section id="commentsSection">');
+
+    if (new URL(request.url).searchParams.has("yeni")) {
+      html = html.replace('<p class="ok-note" id="note" hidden></p>', '<p class="ok-note" id="note">Kazana attın! Linki arkadaşlarına gönder, yorumlar gelsin.</p>');
+    }
+
+    const next = await env.DB.prepare(
+      "SELECT id FROM posts WHERE status = 'live' AND created_at < ? ORDER BY created_at DESC LIMIT 1"
+    ).bind(post.created_at).first();
+    if (next) {
+      html = html.replace('<a class="back-link next-link" id="nextTop" href="/" hidden>', `<a class="back-link next-link" id="nextTop" href="/p/${next.id}">`);
+    }
   } else {
     html = html.replace("<head>", '<head>\n  <meta name="robots" content="noindex">');
   }
