@@ -1,52 +1,60 @@
-# yorumkazani.com · Kazana at, teyzeler yorumlasın
+# yorumkazani.com · Fotoğrafını at, millet yorumlasın
 
-Upload a photo, five Turkish characters comment on it, share the result as a 1080x1920 story card.
-A project of asparajans.
+People upload a photo (outfit, home, food, a message screenshot, a funny shop sign), strangers comment, everyone votes, and the best comment "wins" (yorum kazanır). A project of asparajans.
 
-## How it works
+## What's in it
 
-- `public/` static site (HTML/CSS/JS, no build step). Resizes the photo to max 1024px in the browser and draws the story card in the browser.
-- `functions/api/throw.js` Cloudflare Pages Function. Checks Turnstile, checks the daily free limit in D1, sends the photo to Claude (Haiku 5.5), returns the comments. The photo is never stored.
-- `lib/prompt.js` characters, categories and the system prompt. Tune the humor here.
-- `schema.sql` D1 table for the daily counter (IP stored only as a salted hash).
+- **Feed** (`/`): "Yeni" and "Kaynayanlar" (most recently active), each card shows the current winning comment.
+- **Post page** (`/p/<id>`): photo, comments sorted by votes, 👑 winner badge, up/down votes, report buttons, share button that makes a 1080x1920 story card. Shared links show the photo as the preview on WhatsApp, X, etc.
+- **Upload**: photo is resized and re-encoded in the browser (removes EXIF/GPS location), category, optional question, nickname.
+- **No accounts**: an anonymous cookie id (stored only as a salted hash) is used for votes, limits and "my post".
+- **Admin** (`/admin.html`): pending/hidden/reported photos and comments with Approve / Hide / Delete, plus basic stats.
 
-Refused photos (children in focus, nudity, ID cards, etc.) and AI errors do not use up a free throw.
+## Safety built in
+
+- Cloudflare Turnstile on uploads and comments (bot protection).
+- Daily limits per visitor and per IP: 5 uploads, 80 comments, 500 votes, 30 reports.
+- Word filter (`lib/server.js`, `EXACT` and `PREFIX` lists): blocks swearing, body-shaming words and links. Extend it as real abuse shows up.
+- 3 reports from different people hide a photo or comment until you review it.
+- Photo check before publishing, controlled by `MODERATION`:
+  - `ai`: Claude Haiku checks each photo (children, nudity, IDs, plates, phone numbers...). Rejects with a polite message; on any error the photo waits for you. Needs `ANTHROPIC_API_KEY`.
+  - `manual`: every photo waits for your approval on `/admin.html`.
+  - `off`: photos go live immediately (not recommended).
+  - Default when unset: `ai` if an API key exists, otherwise `manual`.
 
 ## Deploy on Cloudflare (one time)
 
-1. **D1 database**: Cloudflare dashboard > Storage & Databases > D1 > Create, name `yorumkazani`. Open its Console and run the contents of `schema.sql`.
-2. **Turnstile**: Cloudflare dashboard > Turnstile > Add widget for `yorumkazani.com`, mode "Managed". Copy the **site key** into `public/index.html` (`<meta name="turnstile-sitekey">`) and keep the **secret key** for step 4.
-3. **Pages project**: Workers & Pages > Create > Pages > Connect to Git > `firatsekerli/yorumkazani`. Framework preset: None. Build command: empty. Build output directory: `public`.
-4. **Settings > Variables and Secrets** (Production), add:
-   - `ANTHROPIC_API_KEY` (secret) from console.anthropic.com
-   - `TURNSTILE_SECRET` (secret) from step 2
-   - `IP_SALT` (secret) any long random string
-   - `FREE_PER_DAY` = `3` (optional)
-   - `CLAUDE_MODEL` = `claude-haiku-5-5` (optional)
-5. **Settings > Bindings**: add D1 binding, variable name `DB`, database `yorumkazani`.
-6. **Custom domains**: add `yorumkazani.com` (and `www`). The domain's nameservers must point to Cloudflare, or add the CNAME Cloudflare shows.
-7. Redeploy once so the bindings and secrets apply.
+1. **D1**: Storage & Databases > D1 > Create `yorumkazani`. Open Console, paste and run `schema.sql`.
+2. **R2**: R2 > Create bucket `yorumkazani-images` (keep it private; images are served through `/i/`).
+3. **Turnstile**: Turnstile > Add widget for `yorumkazani.com`, mode Managed. Put the **site key** in `public/index.html` and `public/post.html` (`<meta name="turnstile-sitekey">`, currently Cloudflare's test key). Keep the **secret key** for step 5.
+4. **Pages**: Workers & Pages > Create > Pages > Connect to Git > `firatsekerli/yorumkazani`. Framework: None. Build command: empty. Output directory: `public`.
+5. **Settings > Variables and Secrets** (Production):
+   - `TURNSTILE_SECRET` (secret)
+   - `IP_SALT` (secret, any long random string)
+   - `ADMIN_TOKEN` (secret, at least 16 random characters, your /admin password)
+   - `ANTHROPIC_API_KEY` (secret, optional, for the AI photo check)
+   - `MODERATION` (optional, see above)
+6. **Settings > Bindings**: D1 binding `DB` → `yorumkazani`; R2 binding `IMAGES` → `yorumkazani-images`.
+7. **Custom domains**: add `yorumkazani.com` and `www.yorumkazani.com`.
+8. Redeploy once so bindings and secrets apply.
 
-## Local testing
+## Local development
 
 ```bash
 npm install
-cp .dev.vars.example .dev.vars   # add your Anthropic key
+cp .dev.vars.example .dev.vars
 npm run db:local
-npm run dev                      # http://localhost:8788
-npm test                         # offline test of the API logic
+npm run dev                                  # http://localhost:8788
+PHOTO=some.jpg node test/e2e-api.mjs         # full API test against the dev server (use a fresh local DB)
 ```
 
-The site key in `index.html` is Cloudflare's always-pass test key; it pairs with the test secret in `.dev.vars.example`. Replace it with the real key before going live.
+## Costs
 
-## Cost
+Cloudflare Pages, D1, R2 and Turnstile all have free tiers that should cover the start. With the AI photo check on, each upload is one small Claude Haiku call (one image, about 100 output tokens).
 
-Haiku 5.5: $0.10 per million input tokens, $0.50 per million output tokens (prompts under 100k tokens).
-One throw is about 2.5k input tokens (1024px photo plus prompt) and up to 900 output tokens, so roughly $0.0003 to $0.0007.
+## Ideas for later
 
-## Next steps
-
-- Paid throw packs (iyzico or PayTR)
-- Login (magic link) so credits follow the user
-- More characters and seasonal ones (Ramazan, bayram, düğün sezonu)
-- Business version: "Menünü, logonu, ilanını teyzelere sor"
+- Weekly "Haftanın Kazananı" hall of fame and share card
+- Login (magic link) for profiles and reputation
+- Push the daily best to Instagram/TikTok as story cards
+- Ads (AdSense) on feed and post pages once traffic exists

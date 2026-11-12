@@ -2,10 +2,9 @@
   "name": "yorumkazani",
   "private": true,
   "scripts": {
-    "dev": "wrangler pages dev",
+    "dev": "wrangler pages dev --port 8788",
     "db:local": "wrangler d1 execute yorumkazani --local --file=schema.sql",
-    "db:remote": "wrangler d1 execute yorumkazani --remote --file=schema.sql",
-    "test": "node test/throw.test.mjs"
+    "db:remote": "wrangler d1 execute yorumkazani --remote --file=schema.sql"
   },
   "devDependencies": {
     "wrangler": "^4"

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Yönetim · Yorum Kazanı</title>
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="preload" href="/fonts/bangers-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="post-wrap">
+    <h1 class="post-q">Yönetim</h1>
+
+    <form id="login" class="compose">
+      <div class="field" style="margin-top:0">
+        <label for="token">Yönetici anahtarı (ADMIN_TOKEN)</label>
+        <input id="token" type="password" autocomplete="current-password">
+      </div>
+      <button class="btn btn-red" style="margin-top:10px">Giriş</button>
+      <p class="error" id="loginError" hidden></p>
+    </form>
+
+    <div id="panel" hidden>
+      <div class="stat-row" id="stats"></div>
+      <h2 class="section-title">Fotoğraflar</h2>
+      <div id="posts"></div>
+      <h2 class="section-title">Yorumlar</h2>
+      <div id="comments"></div>
+      <button class="link-btn" id="logout">Çıkış</button>
+    </div>
+  </main>
+  <script type="module" src="/admin.js"></script>
+</body>
+</html>

@@ -3,92 +3,106 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Yorum Kazanı · Kazana at, teyzeler yorumlasın</title>
-  <meta name="description" content="Fotoğrafını kazana at, Nermin Teyze, Taksici Recep Abi, kayınvalide Şükran Hanım, Plaza Kaan ve sözlük yazarı yorumlasın. Hikayende paylaş.">
-  <meta property="og:title" content="Yorum Kazanı · Kazana at, teyzeler yorumlasın">
-  <meta property="og:description" content="Kombinini, evini, yemeğini kazana at. Bakalım teyzeler ne diyecek?">
+  <title>Yorum Kazanı · Fotoğrafını at, millet yorumlasın</title>
+  <meta name="description" content="Kombinini, evini, yemeğini, gördüğün garip tabelayı kazana at. Millet yorumlasın, en iyi yorum kazansın.">
+  <meta property="og:title" content="Yorum Kazanı · Fotoğrafını at, millet yorumlasın">
+  <meta property="og:description" content="Kazana at, millet yorumlasın. En iyi yorum kazanır.">
+  <meta property="og:image" content="/brand/logo.png">
   <meta property="og:type" content="website">
-  <meta name="theme-color" content="#2b1d14">
-  <!-- Turnstile site key (public). Replace with your own key from the Cloudflare dashboard. -->
+  <meta name="theme-color" content="#f13e3a">
+  <!-- Turnstile site key (public). This is Cloudflare's test key; replace it with your own before going live. -->
   <meta name="turnstile-sitekey" content="1x00000000000000000000AA">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/brand/icon-256.png">
+  <link rel="preload" href="/fonts/bangers-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
   <link rel="stylesheet" href="/style.css">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
 <body>
+  <header class="top">
+    <div class="top-in">
+      <a class="brand" href="/" aria-label="Yorum Kazanı ana sayfa">
+        <img src="/brand/icon-256.png" alt="" width="40" height="40">
+        <span><span class="y">YORUM</span><span class="k">KAZANI</span></span>
+      </a>
+      <div class="spacer"></div>
+      <button class="btn btn-red" data-open-upload>+ Kazana at</button>
+    </div>
+  </header>
+
   <main class="wrap">
-    <header class="hero">
-      <div class="logo" aria-hidden="true">
-        <svg viewBox="0 0 64 64" width="56" height="56"><use href="#cauldron"/></svg>
-      </div>
-      <h1>Yorum Kazanı</h1>
-      <p class="tagline">Kazana at, teyzeler yorumlasın.</p>
-    </header>
-
-    <section class="card" id="step-upload">
-      <label class="drop" id="drop">
-        <input type="file" id="file" accept="image/jpeg,image/png,image/webp" hidden>
-        <img id="preview" alt="" hidden>
-        <span class="drop-empty" id="dropEmpty">
-          <strong>Fotoğraf seç</strong>
-          <small>Kombin, ev, yemek, mesaj, CV... ne varsa.</small>
-        </span>
-      </label>
-
-      <p class="label">Bu ne?</p>
-      <div class="chips" id="chips" role="radiogroup" aria-label="Kategori">
-        <button type="button" class="chip" data-cat="kombin" aria-pressed="true">Kombin</button>
-        <button type="button" class="chip" data-cat="ev">Ev</button>
-        <button type="button" class="chip" data-cat="yemek">Yemek</button>
-        <button type="button" class="chip" data-cat="mesaj">Mesaj</button>
-        <button type="button" class="chip" data-cat="cv">CV</button>
-        <button type="button" class="chip" data-cat="dugun">Düğün</button>
-        <button type="button" class="chip" data-cat="diger">Diğer</button>
-      </div>
-
-      <div id="turnstile" class="ts"></div>
-
-      <button class="throw" id="throwBtn" disabled>Kazana at!</button>
-      <p class="fine">Fotoğrafın saklanmaz, sadece yorum için kullanılır. Günde birkaç atış ücretsiz.</p>
+    <section class="hero">
+      <h1>Fotoğrafını at, <em>millet yorumlasın.</em></h1>
+      <p>Kombin, ev, yemek, mesaj, garip tabela... Kazana at, en iyi yorum kazansın.</p>
     </section>
 
-    <section class="boiling" id="boiling" hidden aria-live="polite">
-      <svg viewBox="0 0 64 64" class="pot" aria-hidden="true"><use href="#cauldron"/></svg>
-      <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-      <p id="boilText">Kazan kaynıyor...</p>
-    </section>
+    <nav class="tabs" aria-label="Sıralama">
+      <button class="tab" data-sort="new" aria-pressed="true">Yeni</button>
+      <button class="tab" data-sort="hot" aria-pressed="false">Kaynayanlar</button>
+    </nav>
 
-    <section id="result" hidden>
-      <h2 class="result-title" id="resultTitle"></h2>
-      <ul class="comments" id="comments"></ul>
-      <div class="actions">
-        <button class="throw" id="shareBtn">Hikayende paylaş</button>
-        <button class="ghost" id="againBtn">Yeni bir şey at</button>
-      </div>
-      <p class="fine" id="remaining"></p>
-    </section>
-
-    <p class="error" id="error" role="alert" hidden></p>
-
-    <footer class="foot">
-      Yorum Kazanı bir eğlence sitesidir; yorumlar yapay zekâ ile üretilir.<br>
-      Bir <a href="https://asparajans.com" rel="noopener">asparajans</a> projesi.
-    </footer>
+    <div class="grid" id="feed"></div>
+    <div class="empty" id="empty" hidden>
+      <strong>Kazan henüz boş</strong>
+      İlk fotoğrafı sen at, ilk yorumlar senin olsun.
+    </div>
+    <button class="btn btn-ghost more" id="more" hidden>Daha fazla</button>
   </main>
 
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="cauldron" viewBox="0 0 64 64">
-      <ellipse cx="32" cy="22" rx="24" ry="6" fill="#7bd389"/>
-      <path d="M8 22c0 18 9 30 24 30s24-12 24-30" fill="#3a2a20" stroke="#1d140e" stroke-width="2"/>
-      <ellipse cx="32" cy="22" rx="24" ry="6" fill="none" stroke="#1d140e" stroke-width="2"/>
-      <circle cx="24" cy="18" r="3" fill="#b8f0c2"/><circle cx="38" cy="16" r="2.2" fill="#b8f0c2"/><circle cx="31" cy="12" r="1.6" fill="#b8f0c2"/>
-      <path d="M16 52l-4 6M48 52l4 6" stroke="#1d140e" stroke-width="3" stroke-linecap="round"/>
-    </symbol>
-  </svg>
+  <footer class="foot">
+    Burada şeylere gülüyoruz, insanlara değil. Kurallara uymayan içerikleri bildir.<br>
+    Bir <a href="https://asparajans.com" rel="noopener">asparajans</a> projesi.
+  </footer>
 
-  <script src="/app.js" type="module"></script>
+  <button class="btn btn-red fab" data-open-upload>+ Kazana at</button>
+
+  <!-- upload sheet -->
+  <div class="sheet-bg" id="sheet" hidden>
+    <form class="sheet" id="uploadForm" novalidate>
+      <button type="button" class="sheet-close" id="sheetClose" aria-label="Kapat">×</button>
+      <h2>Kazana at</h2>
+
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept="image/*" hidden>
+        <img id="preview" alt="Seçilen fotoğraf" hidden>
+        <span id="dropEmpty"><strong>Fotoğraf seç</strong><small>Telefonundan ya da bilgisayarından</small></span>
+      </label>
+
+      <div class="field">
+        <label>Bu ne?</label>
+        <div class="chips" id="chips">
+          <button type="button" class="chip" data-cat="kombin" aria-pressed="true">Kombin</button>
+          <button type="button" class="chip" data-cat="ev" aria-pressed="false">Ev</button>
+          <button type="button" class="chip" data-cat="yemek" aria-pressed="false">Yemek</button>
+          <button type="button" class="chip" data-cat="mesaj" aria-pressed="false">Mesaj</button>
+          <button type="button" class="chip" data-cat="tabela" aria-pressed="false">Tabela</button>
+          <button type="button" class="chip" data-cat="dugun" aria-pressed="false">Düğün</button>
+          <button type="button" class="chip" data-cat="diger" aria-pressed="false">Diğer</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="question">Millete ne soruyorsun? <span class="hint">(isteğe bağlı)</span></label>
+        <input id="question" maxlength="120" placeholder="Örn: Bu kombinle düğüne gidilir mi?">
+      </div>
+
+      <div class="field">
+        <label for="nick">Takma adın</label>
+        <input id="nick" maxlength="24" placeholder="Anonim" autocomplete="nickname">
+      </div>
+
+      <div class="rules">
+        <b>Kurallar:</b> Çocuk fotoğrafı yok. Başkasının yüzü, adı, telefonu, plakası yok. Çıplaklık, şiddet, reklam yok.
+        Mesaj ekran görüntülerinde isim ve numaraları kapat. Fotoğrafın konum bilgisi otomatik silinir.
+      </div>
+
+      <div class="ts" id="uploadTs"></div>
+      <p class="error" id="uploadError" hidden></p>
+      <button class="btn btn-red btn-big" id="uploadBtn" type="submit" disabled style="margin-top:14px">Kazana at!</button>
+    </form>
+  </div>
+
+  <script type="module" src="/home.js"></script>
 </body>
 </html>

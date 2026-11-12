@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yorum Kazanı</title>
+  <meta name="theme-color" content="#f13e3a">
+  <meta name="turnstile-sitekey" content="1x00000000000000000000AA">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/brand/icon-256.png">
+  <link rel="preload" href="/fonts/bangers-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="top-in">
+      <a class="brand" href="/" aria-label="Yorum Kazanı ana sayfa">
+        <img src="/brand/icon-256.png" alt="" width="40" height="40">
+        <span><span class="y">YORUM</span><span class="k">KAZANI</span></span>
+      </a>
+      <div class="spacer"></div>
+      <a class="btn btn-red" href="/?yukle=1">+ Kazana at</a>
+    </div>
+  </header>
+
+  <main class="post-wrap">
+    <p class="ok-note" id="note" hidden></p>
+    <div id="notFound" class="empty" hidden><strong>Bu kazan bulunamadı</strong>Kaldırılmış ya da hiç olmamış olabilir. <a href="/">Ana sayfaya dön</a></div>
+
+    <article class="post-card" id="post" hidden>
+      <img id="photo" alt="">
+      <div class="post-head">
+        <h1 class="post-q" id="question"></h1>
+        <div class="meta" id="meta"></div>
+        <div class="post-actions">
+          <button class="btn btn-red" id="shareBtn">Paylaş</button>
+          <button class="btn btn-ghost" id="copyBtn">Linki kopyala</button>
+        </div>
+        <button class="link-btn" id="reportPost" style="margin-top:10px">Bu fotoğrafı bildir</button>
+      </div>
+    </article>
+
+    <section id="commentsSection" hidden>
+      <h2 class="section-title">Yorumlar</h2>
+      <form class="compose" id="compose" novalidate>
+        <div class="field" style="margin-top:0">
+          <textarea id="body" maxlength="280" placeholder="En komik yorumu yaz, kazanan sen ol..." aria-label="Yorumun"></textarea>
+        </div>
+        <div class="compose-row">
+          <input id="cnick" class="field" maxlength="24" placeholder="Takma ad" aria-label="Takma adın"
+                 style="border:2px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-weight:700">
+          <span class="counter" id="counter">0/280</span>
+          <button class="btn btn-red" id="sendBtn" type="submit" disabled>Yorumla</button>
+        </div>
+        <div class="ts" id="commentTs"></div>
+        <p class="error" id="commentError" hidden></p>
+      </form>
+      <ul class="comments" id="comments"></ul>
+      <p class="empty" id="noComments" hidden>Henüz yorum yok. İlk yorumu yazan kazanmaya en yakın kişi!</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    Burada şeylere gülüyoruz, insanlara değil. Kurallara uymayan içerikleri bildir.<br>
+    Bir <a href="https://asparajans.com" rel="noopener">asparajans</a> projesi.
+  </footer>
+
+  <script type="module" src="/post.js"></script>
+</body>
+</html>

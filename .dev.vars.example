@@ -1,5 +1,6 @@
 # Copy to .dev.vars for local testing (never commit .dev.vars)
-ANTHROPIC_API_KEY=sk-ant-...
-# Cloudflare's always-pass test secret, pairs with the test site key in index.html
-TURNSTILE_SECRET=1x0000000000000000000000000000000AA
 IP_SALT=any-long-random-string
+ADMIN_TOKEN=a-long-random-admin-token-1234567890
+DEV_SKIP_TURNSTILE=1
+MODERATION=off
+# ANTHROPIC_API_KEY=sk-ant-...   # optional: enables the AI photo safety check
