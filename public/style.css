@@ -229,3 +229,8 @@ img { display: block; max-width: 100%; }
   .feed .meta { font-size: 12px; gap: 4px; }
   .feed .top-comment { font-size: 13px; padding: 6px 8px; }
 }
+
+/* photo page spacing and back link */
+.post-wrap { padding-top: 28px; padding-bottom: 48px; }
+.back-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 900; font-size: 16px; color: var(--ink-strong); text-decoration: none; margin-bottom: 16px; padding: 8px 14px 8px 10px; border-radius: 999px; background: #fff; box-shadow: var(--shadow); }
+.back-link:hover { color: var(--red); }

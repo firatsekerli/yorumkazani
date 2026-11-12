@@ -18,9 +18,7 @@ function render() {
   $("#photo").alt = post.question || `${post.nick} kazana attı`;
   if (post.width && post.height) { $("#photo").width = post.width; $("#photo").height = post.height; }
   $("#question").textContent = post.question || `${post.nick} kazana attı`;
-  $("#meta").replaceChildren(
-    el("span", { class: "pill" }, post.categoryLabel), el("span", {}, post.nick), el("span", {}, "·"),
-    el("span", {}, timeAgo(post.createdAt)));
+  $("#meta").replaceChildren(el("span", {}, post.nick), el("span", {}, "·"), el("span", {}, timeAgo(post.createdAt)));
 
   if (post.status === "pending") {
     note("Fotoğrafın onay bekliyor. Onaylanınca herkes görecek; şimdilik sadece sen görüyorsun.");
