@@ -1,4 +1,4 @@
-// GET /i/<postId>.jpg   serves a post photo from R2 (live posts only, or pending ones to their uploader / admin)
+// GET /i/<postId>.jpg   serves a post photo from Workers KV (live posts only, or pending ones to their uploader / admin)
 
 import { visitor, isAdmin } from "../../lib/server.js";
 
@@ -16,9 +16,9 @@ export async function onRequestGet({ params, request, env }) {
   }
   if (!allowed) return new Response("Not found", { status: 404 });
 
-  const obj = await env.IMAGES.get(post.image_key);
-  if (!obj) return new Response("Not found", { status: 404 });
-  return new Response(obj.body, {
+  const body = await env.IMAGES.get(post.image_key, "stream"); // Workers KV
+  if (!body) return new Response("Not found", { status: 404 });
+  return new Response(body, {
     headers: {
       "content-type": "image/jpeg",
       // Short cache so a hidden photo disappears quickly.

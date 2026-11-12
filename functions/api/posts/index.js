@@ -82,7 +82,7 @@ export async function onRequestPost({ request, env }) {
 
   const id = newId();
   const now = Date.now();
-  await env.IMAGES.put(`p/${id}.jpg`, buf, { httpMetadata: { contentType: "image/jpeg" } });
+  await env.IMAGES.put(`p/${id}.jpg`, buf); // Workers KV
   await env.DB.prepare(
     `INSERT INTO posts (id, created_at, author_hash, nick, category, question, image_key, width, height, status, last_activity)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`

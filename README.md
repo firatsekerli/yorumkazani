@@ -6,6 +6,7 @@ People upload a photo (outfit, home, food, a message screenshot, a funny shop si
 
 - **Feed** (`/`): "Yeni" and "Kaynayanlar" (most recently active), each card shows the current winning comment.
 - **Post page** (`/p/<id>`): photo, comments sorted by votes, 👑 winner badge, up/down votes, report buttons, share button that makes a 1080x1920 story card. Shared links show the photo as the preview on WhatsApp, X, etc.
+- **Storage**: photos in Workers KV (`IMAGES`), data in D1 (`DB`). Both bindings are set in `wrangler.toml`.
 - **Upload**: photo is resized and re-encoded in the browser (removes EXIF/GPS location), category, optional question, nickname.
 - **No accounts**: an anonymous cookie id (stored only as a salted hash) is used for votes, limits and "my post".
 - **Admin** (`/admin.html`): pending/hidden/reported photos and comments with Approve / Hide / Delete, plus basic stats.
@@ -25,7 +26,7 @@ People upload a photo (outfit, home, food, a message screenshot, a funny shop si
 ## Deploy on Cloudflare (one time)
 
 1. **D1**: Storage & Databases > D1 > Create `yorumkazani`. Open Console, paste and run `schema.sql`.
-2. **R2**: R2 > Create bucket `yorumkazani-images` (keep it private; images are served through `/i/`).
+2. **KV**: Workers KV > Create namespace `yorumkazani-images` (images are served through `/i/`). Put its id in `wrangler.toml`.
 3. **Turnstile**: Turnstile > Add widget for `yorumkazani.com`, mode Managed. Put the **site key** in `public/index.html` and `public/post.html` (`<meta name="turnstile-sitekey">`, currently Cloudflare's test key). Keep the **secret key** for step 5.
 4. **Pages**: Workers & Pages > Create > Pages > Connect to Git > `firatsekerli/yorumkazani`. Framework: None. Build command: empty. Output directory: `public`.
 5. **Settings > Variables and Secrets** (Production):
@@ -34,7 +35,7 @@ People upload a photo (outfit, home, food, a message screenshot, a funny shop si
    - `ADMIN_TOKEN` (secret, at least 16 random characters, your /admin password)
    - `ANTHROPIC_API_KEY` (secret, optional, for the AI photo check)
    - `MODERATION` (optional, see above)
-6. **Settings > Bindings**: D1 binding `DB` → `yorumkazani`; R2 binding `IMAGES` → `yorumkazani-images`.
+6. **Bindings** come from `wrangler.toml` (D1 `DB`, KV `IMAGES`), nothing to set in the dashboard.
 7. **Custom domains**: add `yorumkazani.com` and `www.yorumkazani.com`.
 8. Redeploy once so bindings and secrets apply.
 
@@ -50,7 +51,7 @@ PHOTO=some.jpg node test/e2e-api.mjs         # full API test against the dev ser
 
 ## Costs
 
-Cloudflare Pages, D1, R2 and Turnstile all have free tiers that should cover the start. With the AI photo check on, each upload is one small Claude Haiku call (one image, about 100 output tokens).
+Cloudflare Pages, D1, KV and Turnstile all have free tiers (KV free: 1 GB, 1,000 writes/day) that should cover the start. With the AI photo check on, each upload is one small Claude Haiku call (one image, about 100 output tokens).
 
 ## Ideas for later
 
