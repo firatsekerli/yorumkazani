@@ -24,9 +24,10 @@ export async function onRequestPost({ request, env }) {
   if (ins.meta && ins.meta.changes) {
     await env.DB.prepare(
       `UPDATE ${table} SET report_count = report_count + 1,
-         status = CASE WHEN report_count + 1 >= ? AND status = 'live' THEN 'hidden' ELSE status END
-       WHERE id = ?`
-    ).bind(LIMITS.hideAfterReports, row.id).run();
+         ${table === "posts" ? "last_activity = CASE WHEN report_count + 1 >= ?3 AND status = 'live' THEN ?2 ELSE last_activity END," : ""}
+         status = CASE WHEN report_count + 1 >= ?3 AND status = 'live' THEN 'hidden' ELSE status END
+       WHERE id = ?1`
+    ).bind(row.id, Date.now(), LIMITS.hideAfterReports).run();
   }
   return done(json({ ok: true }));
 }

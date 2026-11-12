@@ -2,10 +2,11 @@
 // POST /api/admin  { type, id, action: "approve"|"hide"|"delete" }
 // Requires header  Authorization: Bearer <ADMIN_TOKEN>
 
-import { json, fail, isAdmin, publicPost } from "../../lib/server.js";
+import { json, fail, isAdmin, publicPost, deletePost, purgeStale } from "../../lib/server.js";
 
 export async function onRequestGet({ request, env }) {
   if (!isAdmin(request, env)) return fail("Yetkisiz.", 401, "unauthorized");
+  await purgeStale(env);
 
   const { results: posts } = await env.DB.prepare(
     `SELECT * FROM posts WHERE status IN ('pending','hidden') OR report_count > 0
@@ -54,17 +55,9 @@ export async function onRequestPost({ request, env }) {
 
   if (type === "post") {
     if (action === "approve") await env.DB.prepare("UPDATE posts SET status='live', report_count=0 WHERE id=?").bind(id).run();
-    else if (action === "hide") await env.DB.prepare("UPDATE posts SET status='hidden' WHERE id=?").bind(id).run();
+    else if (action === "hide") await env.DB.prepare("UPDATE posts SET status='hidden', last_activity=? WHERE id=?").bind(Date.now(), id).run();
     else if (action === "delete") {
-      const p = await env.DB.prepare("SELECT image_key FROM posts WHERE id=?").bind(id).first();
-      if (p) await env.IMAGES.delete(p.image_key);
-      await env.DB.batch([
-        env.DB.prepare("DELETE FROM votes WHERE comment_id IN (SELECT id FROM comments WHERE post_id=?)").bind(id),
-        env.DB.prepare("DELETE FROM reports WHERE target_type='comment' AND target_id IN (SELECT id FROM comments WHERE post_id=?)").bind(id),
-        env.DB.prepare("DELETE FROM comments WHERE post_id=?").bind(id),
-        env.DB.prepare("DELETE FROM reports WHERE target_type='post' AND target_id=?").bind(id),
-        env.DB.prepare("DELETE FROM posts WHERE id=?").bind(id),
-      ]);
+      await deletePost(env, id);
     } else return fail("Geçersiz işlem.");
   } else {
     if (action === "approve") await env.DB.prepare("UPDATE comments SET status='live', report_count=0 WHERE id=?").bind(id).run();

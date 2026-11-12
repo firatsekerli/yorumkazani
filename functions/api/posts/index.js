@@ -2,7 +2,7 @@
 // POST /api/posts  (multipart: image, category, question, nick, token)   upload a photo
 
 import {
-  CATEGORIES, LIMITS, json, fail, visitor, withCookie, human, takeRate, clean, blocked, newId, checkPhoto, toBase64, publicPost, listPosts,
+  CATEGORIES, LIMITS, json, fail, visitor, withCookie, human, takeRate, clean, blocked, newId, checkPhoto, toBase64, publicPost, listPosts, purgeStale,
 } from "../../../lib/server.js";
 
 const PAGE = 24;
@@ -17,7 +17,7 @@ export async function onRequestGet({ request, env }) {
   return json({ ok: true, posts, next });
 }
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   const v = await visitor(request, env);
   const done = (res) => withCookie(res, v);
 
@@ -69,5 +69,6 @@ export async function onRequestPost({ request, env }) {
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).bind(id, now, v.hash, nick, category, question, `p/${id}.jpg`, width, height, status, now).run();
 
+  waitUntil(purgeStale(env).catch(() => {}));
   return done(json({ ok: true, id, status }));
 }
