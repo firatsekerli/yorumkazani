@@ -236,8 +236,6 @@ img { display: block; max-width: 100%; }
 .back-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 900; font-size: 16px; color: var(--ink-strong); text-decoration: none; margin-bottom: 16px; padding: 8px 14px 8px 10px; border-radius: 999px; background: #fff; box-shadow: var(--shadow); }
 .back-link:hover { color: var(--red); }
 
-/* reserve room while the feed loads so the footer doesn't jump */
-#feed:empty { min-height: 360px; }
 
 /* top row on the photo page: back on the left, next on the right */
 .top-nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 16px; }

@@ -2,7 +2,7 @@
 // POST /api/posts  (multipart: image, category, question, nick, token)   upload a photo
 
 import {
-  CATEGORIES, LIMITS, json, fail, visitor, withCookie, human, takeRate, clean, blocked, newId, checkPhoto, toBase64, publicPost,
+  CATEGORIES, LIMITS, json, fail, visitor, withCookie, human, takeRate, clean, blocked, newId, checkPhoto, toBase64, publicPost, listPosts,
 } from "../../../lib/server.js";
 
 const PAGE = 24;
@@ -11,29 +11,9 @@ export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   const sort = url.searchParams.get("sort") === "hot" ? "hot" : "new";
   const before = Number(url.searchParams.get("before")) || Date.now() + 1;
-  const col = sort === "hot" ? "last_activity" : "created_at";
   const limit = Math.min(PAGE, Math.max(1, Number(url.searchParams.get("limit")) || PAGE));
 
-  const { results } = await env.DB.prepare(
-    `SELECT * FROM posts WHERE status = 'live' AND ${col} < ? ORDER BY ${col} DESC LIMIT ?`
-  ).bind(before, limit).all();
-
-  // top comment preview for each card
-  const ids = results.map((p) => p.id);
-  const tops = {};
-  if (ids.length) {
-    const marks = ids.map(() => "?").join(",");
-    const { results: cs } = await env.DB.prepare(
-      `SELECT post_id, nick, body, score FROM comments c
-       WHERE status = 'live' AND post_id IN (${marks})
-         AND id = (SELECT id FROM comments c2 WHERE c2.post_id = c.post_id AND c2.status = 'live'
-                   ORDER BY score DESC, created_at ASC LIMIT 1)`
-    ).bind(...ids).all();
-    for (const c of cs) tops[c.post_id] = { nick: c.nick, body: c.body, score: c.score };
-  }
-
-  const posts = results.map((p) => ({ ...publicPost(p), top: tops[p.id] || null }));
-  const next = results.length === limit ? results[results.length - 1][col] : null;
+  const { posts, next } = await listPosts(env, { sort, before, limit });
   return json({ ok: true, posts, next });
 }
 

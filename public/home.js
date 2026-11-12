@@ -77,4 +77,6 @@ function card(p) {
 }
 
 $("#more").addEventListener("click", loadFeed);
-loadFeed();
+// The server already rendered the first photos; only fetch here if it didn't.
+if ($("#feed").dataset.ssr) next = Number($("#more").dataset.next) || null;
+else loadFeed();
