@@ -17,7 +17,7 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
-html { scrollbar-gutter: stable; }
+@media (hover: hover) and (pointer: fine) { html { scrollbar-gutter: stable; } }
 body { font-family: var(--body); background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; }
 a { color: inherit; }
 button { font: inherit; color: inherit; }
@@ -238,3 +238,11 @@ img { display: block; max-width: 100%; }
 
 /* reserve room while the feed loads so the footer doesn't jump */
 #feed:empty { min-height: 360px; }
+
+/* top row on the photo page: back on the left, next on the right */
+.top-nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 16px; }
+.top-nav .back-link { margin-bottom: 0; }
+.top-nav .next-link { background: var(--red); color: #fff; padding: 8px 10px 8px 14px; }
+.top-nav .next-link:hover { color: #fff; background: var(--red-dark); }
+.top-nav [hidden] { display: none; }
+@media (max-width: 720px) { .top-nav .back-link { font-size: 15px; } }

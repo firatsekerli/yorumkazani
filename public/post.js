@@ -54,6 +54,8 @@ async function loadNext() {
   if (data.ok && data.posts.length) {
     $("#nextPost").href = `/p/${data.posts[0].id}`;
     $("#nextPost").hidden = false;
+    $("#nextTop").href = `/p/${data.posts[0].id}`;
+    $("#nextTop").hidden = false;
   }
 }
 
