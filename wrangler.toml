@@ -9,7 +9,7 @@ POSTS_PER_DAY = "5"
 # "off" = photos go live immediately (not recommended)
 # If unset: "ai" when ANTHROPIC_API_KEY exists, otherwise "manual".
 MODERATION = "ai"
-CLAUDE_MODEL = "claude-haiku-5-5"
+CLAUDE_MODEL = "claude-sonnet-5-5"
 
 # npx wrangler d1 create yorumkazani   -> paste the database_id it prints
 [[d1_databases]]
