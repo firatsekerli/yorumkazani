@@ -184,7 +184,7 @@ img { display: block; max-width: 100%; }
 .site-slogan { margin: 0; font-family: var(--display); font-size: 26px; letter-spacing: .03em; color: var(--red); transform: skewX(-6deg); text-align: right; }
 
 .home { max-width: 1080px; width: 100%; margin: 0 auto; padding: 56px 20px 64px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
-.home-text h1 { font-family: var(--display); font-weight: 400; letter-spacing: .02em; font-size: clamp(52px, 7vw, 84px); line-height: 1; margin: 0 0 22px; color: var(--ink-strong); }
+.home-text h1 { font-family: var(--display); font-weight: 400; letter-spacing: .02em; font-size: clamp(40px, 5.6vw, 72px); line-height: 1; margin: 0 0 22px; color: var(--ink-strong); }
 .home-text h1 em { font-style: normal; color: var(--red); }
 .home-text p { font-size: clamp(20px, 2.2vw, 24px); line-height: 1.5; font-weight: 700; color: var(--ink); margin: 0; max-width: 520px; }
 .upload-card { background: #fff; border-radius: 22px; box-shadow: var(--shadow); padding: 22px; }
@@ -203,3 +203,5 @@ img { display: block; max-width: 100%; }
   .site-slogan { font-size: 19px; }
   .site-foot-in { flex-direction: column; text-align: center; align-items: center; }
 }
+
+.home-text h1 .l { display: block; white-space: nowrap; }

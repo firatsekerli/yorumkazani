@@ -171,7 +171,7 @@ async function drawCard() {
     ctx.fillStyle = "#2a2a2c"; ctx.font = `900 48px ${B}`; ctx.textAlign = "center";
     ctx.fillText("Sence ne demeli?", W / 2, y + 80);
     ctx.fillStyle = "#86868b"; ctx.font = `800 36px ${B}`;
-    ctx.fillText("En komik yorum kazanır", W / 2, y + 130);
+    ctx.fillText("En çok oy alan yorum kazanır", W / 2, y + 130);
   }
 
   // footer: logo + url

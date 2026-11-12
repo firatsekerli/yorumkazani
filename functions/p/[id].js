@@ -12,7 +12,7 @@ export async function onRequestGet({ params, request, env }) {
   if (post && post.status === "live") {
     const origin = new URL(request.url).origin;
     const title = post.question ? `${post.question} | Yorum Kazanı` : `${post.nick} kazana attı | Yorum Kazanı`;
-    const desc = `${post.comment_count} yorum. Sen de yorumla, en iyi yorum kazansın!`;
+    const desc = `${post.comment_count} yorum. Sen de yorumla, en çok oy alan yorum kazansın!`;
     const tags = `
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(desc)}">
