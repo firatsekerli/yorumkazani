@@ -4,7 +4,7 @@ People upload a photo (outfit, home, food, a message screenshot, a funny shop si
 
 ## What's in it
 
-- **Feed** (`/`): "Yeni" and "Kaynayanlar" (most recently active), each card shows the current winning comment.
+- **Home** (`/`): logo, title, two lines and one "Kazana at" button that opens the upload.
 - **Post page** (`/p/<id>`): photo, comments sorted by votes, 👑 winner badge, up/down votes, report buttons, share button that makes a 1080x1920 story card. Shared links show the photo as the preview on WhatsApp, X, etc.
 - **Storage**: photos in Workers KV (`IMAGES`), data in D1 (`DB`). Both bindings are set in `wrangler.toml`.
 - **Upload**: photo is resized and re-encoded in the browser (removes EXIF/GPS location), category, optional question, nickname.
@@ -27,7 +27,7 @@ People upload a photo (outfit, home, food, a message screenshot, a funny shop si
 
 1. **D1**: Storage & Databases > D1 > Create `yorumkazani`. Open Console, paste and run `schema.sql`.
 2. **KV**: Workers KV > Create namespace `yorumkazani-images` (images are served through `/i/`). Put its id in `wrangler.toml`.
-3. **Turnstile**: Turnstile > Add widget for `yorumkazani.com`, mode Managed. Put the **site key** in `public/index.html` and `public/post.html` (`<meta name="turnstile-sitekey">`, currently Cloudflare's test key). Keep the **secret key** for step 5.
+3. **Turnstile**: Turnstile > Add widget for `yorumkazani.com`, mode Managed. Put the **site key** in `public/index.html` and `public/post.html` (`<meta name="turnstile-sitekey">`). Keep the **secret key** for step 5.
 4. **Pages**: Workers & Pages > Create > Pages > Connect to Git > `firatsekerli/yorumkazani`. Framework: None. Build command: empty. Output directory: `public`.
 5. **Settings > Variables and Secrets** (Production):
    - `TURNSTILE_SECRET` (secret)
