@@ -2,7 +2,8 @@ import { $, api, postJSON, el, getNick, setNick, turnstile, timeAgo, toast } fro
 
 const id = location.pathname.split("/").filter(Boolean)[1];
 const params = new URLSearchParams(location.search);
-let post = null, comments = [], ts = null;
+let post = null, comments = [], ts = null, showAll = false;
+const FIRST = 10;
 
 async function load() {
   const data = await api(`/api/posts/${encodeURIComponent(id)}`);
@@ -31,14 +32,31 @@ function render() {
   $("#cnick").value = getNick();
   if (!ts) ts = turnstile("#commentTs");
   renderComments();
+  loadNext();
 }
 
 function note(msg) { $("#note").textContent = msg; $("#note").hidden = false; }
 
 function renderComments() {
   const ul = $("#comments");
-  ul.replaceChildren(...comments.map((c, i) => commentEl(c, i === 0 && c.score > 0)));
+  const shown = showAll ? comments : comments.slice(0, FIRST);
+  ul.replaceChildren(...shown.map((c, i) => commentEl(c, i === 0 && c.score > 0)));
   $("#noComments").hidden = comments.length > 0;
+  const rest = comments.length - shown.length;
+  $("#allComments").hidden = rest <= 0;
+  $("#allComments").textContent = `Tüm yorumları göster (${comments.length})`;
+}
+
+$("#allComments").addEventListener("click", () => { showAll = true; renderComments(); });
+
+// "Sıradaki fotoğraf": the next older live photo
+async function loadNext() {
+  $("#postNav").hidden = false;
+  const data = await api(`/api/posts?limit=1&before=${post.createdAt}`);
+  if (data.ok && data.posts.length) {
+    $("#nextPost").href = `/p/${data.posts[0].id}`;
+    $("#nextPost").hidden = false;
+  }
 }
 
 function commentEl(c, winner) {
@@ -97,6 +115,7 @@ $("#compose").addEventListener("submit", async (e) => {
     return;
   }
   comments.push(data.comment);
+  showAll = true;
   renderComments();
   body.value = ""; $("#counter").textContent = "0/280";
   toast("Yorumun kazanda!");

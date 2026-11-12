@@ -1,4 +1,4 @@
-// GET  /api/posts?sort=new|hot&before=<cursor>   list live posts
+// GET  /api/posts?sort=new|hot&before=<cursor>&limit=<1-24>   list live posts
 // POST /api/posts  (multipart: image, category, question, nick, token)   upload a photo
 
 import {
@@ -12,10 +12,11 @@ export async function onRequestGet({ request, env }) {
   const sort = url.searchParams.get("sort") === "hot" ? "hot" : "new";
   const before = Number(url.searchParams.get("before")) || Date.now() + 1;
   const col = sort === "hot" ? "last_activity" : "created_at";
+  const limit = Math.min(PAGE, Math.max(1, Number(url.searchParams.get("limit")) || PAGE));
 
   const { results } = await env.DB.prepare(
     `SELECT * FROM posts WHERE status = 'live' AND ${col} < ? ORDER BY ${col} DESC LIMIT ?`
-  ).bind(before, PAGE).all();
+  ).bind(before, limit).all();
 
   // top comment preview for each card
   const ids = results.map((p) => p.id);
@@ -32,7 +33,7 @@ export async function onRequestGet({ request, env }) {
   }
 
   const posts = results.map((p) => ({ ...publicPost(p), top: tops[p.id] || null }));
-  const next = results.length === PAGE ? results[results.length - 1][col] : null;
+  const next = results.length === limit ? results[results.length - 1][col] : null;
   return json({ ok: true, posts, next });
 }
 
