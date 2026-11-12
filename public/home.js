@@ -1,52 +1,7 @@
-import { $, api, el, getNick, setNick, turnstile, prepareImage, timeAgo } from "/common.js";
+import { $, api, getNick, setNick, turnstile, prepareImage } from "/common.js";
 
-// ---------- feed ----------
-const feed = $("#feed");
-let sort = "new", next = null, loading = false;
-
-async function load(reset) {
-  if (loading) return;
-  loading = true;
-  if (reset) { feed.innerHTML = ""; next = null; }
-  const q = new URLSearchParams({ sort });
-  if (next) q.set("before", next);
-  const data = await api(`/api/posts?${q}`);
-  loading = false;
-  if (!data.ok) return;
-  data.posts.forEach((p) => feed.append(card(p)));
-  next = data.next;
-  $("#more").hidden = !next;
-  $("#empty").hidden = feed.children.length > 0;
-}
-
-function card(p) {
-  return el("a", { class: "card", href: `/p/${p.id}` },
-    el("img", { src: p.image, alt: p.question || `${p.nick} kazana attı`, loading: "lazy", width: p.width || null, height: p.height || null }),
-    el("div", { class: "card-body" },
-      p.question ? el("p", { class: "card-q" }, p.question) : null,
-      el("div", { class: "meta" },
-        el("span", { class: "pill" }, p.categoryLabel),
-        el("span", {}, p.nick),
-        el("span", {}, "·"),
-        el("span", {}, timeAgo(p.createdAt)),
-        el("span", {}, "·"),
-        el("span", {}, `${p.commentCount} yorum`)),
-      p.top ? el("div", { class: "top-comment" },
-        p.top.score > 0 ? el("span", { class: "crown" }, "👑 Şimdilik kazanan") : null,
-        el("b", {}, p.top.nick + ": "), p.top.body) : null));
-}
-
-document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => {
-  document.querySelectorAll(".tab").forEach((x) => x.setAttribute("aria-pressed", String(x === t)));
-  sort = t.dataset.sort;
-  load(true);
-}));
-$("#more").addEventListener("click", () => load(false));
-load(true);
-
-// ---------- upload ----------
 const sheet = $("#sheet");
-let ts = null, photo = null, category = "kombin";
+let ts = null, photo = null;
 
 function openSheet() {
   sheet.hidden = false;
@@ -76,12 +31,6 @@ $("#file").addEventListener("change", async (e) => {
   }
 });
 
-$("#chips").addEventListener("click", (e) => {
-  const b = e.target.closest(".chip"); if (!b) return;
-  document.querySelectorAll("#chips .chip").forEach((c) => c.setAttribute("aria-pressed", String(c === b)));
-  category = b.dataset.cat;
-});
-
 $("#uploadForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!photo) return;
@@ -96,7 +45,7 @@ $("#uploadForm").addEventListener("submit", async (e) => {
   fd.append("image", photo.blob, "photo.jpg");
   fd.append("width", photo.width);
   fd.append("height", photo.height);
-  fd.append("category", category);
+  fd.append("category", "diger");
   fd.append("question", $("#question").value.trim());
   fd.append("nick", nick);
   fd.append("token", token || "");

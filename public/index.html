@@ -4,11 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Yorum Kazanı · Fotoğrafını at, millet yorumlasın</title>
-  <meta name="description" content="Kombinini, evini, yemeğini, gördüğün garip tabelayı kazana at. Millet yorumlasın, en iyi yorum kazansın.">
-  <meta property="og:title" content="Yorum Kazanı · Fotoğrafını at, millet yorumlasın">
-  <meta property="og:description" content="Kazana at, millet yorumlasın. En iyi yorum kazanır.">
+  <meta name="description" content="Fotoğrafını kazana at, millet yorumlasın. En iyi yorum kazanır.">
+  <meta property="og:title" content="Yorum Kazanı">
+  <meta property="og:description" content="Fotoğrafını kazana at, millet yorumlasın. En iyi yorum kazanır.">
   <meta property="og:image" content="/brand/logo.png">
-  <meta property="og:type" content="website">
   <meta name="theme-color" content="#f13e3a">
   <!-- Turnstile site key (public). This is Cloudflare's test key; replace it with your own before going live. -->
   <meta name="turnstile-sitekey" content="1x00000000000000000000AA">
@@ -17,45 +16,27 @@
   <link rel="preload" href="/fonts/bangers-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/fonts/fonts.css">
   <link rel="stylesheet" href="/style.css">
+  <style>
+    .simple { min-height: 100vh; display: grid; place-items: center; text-align: center; padding: 32px 16px; }
+    .simple-in { max-width: 460px; }
+    .simple img.logo { width: 220px; height: auto; margin: 0 auto 18px; }
+    .simple h1 { font-family: var(--display); font-weight: 400; letter-spacing: .02em; font-size: 44px; line-height: 1.05; margin: 0 0 12px; color: var(--ink-strong); }
+    .simple p { font-size: 18px; font-weight: 700; color: var(--muted); margin: 0 0 26px; line-height: 1.5; }
+    .simple .btn { font-size: 20px; padding: 15px 34px; }
+    .simple small { display: block; margin-top: 28px; color: var(--muted); font-weight: 600; }
+  </style>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
 <body>
-  <header class="top">
-    <div class="top-in">
-      <a class="brand" href="/" aria-label="Yorum Kazanı ana sayfa">
-        <img src="/brand/icon-256.png" alt="" width="40" height="40">
-        <span><span class="y">YORUM</span><span class="k">KAZANI</span></span>
-      </a>
-      <div class="spacer"></div>
-      <button class="btn btn-red" data-open-upload>+ Kazana at</button>
+  <main class="simple">
+    <div class="simple-in">
+      <img class="logo" src="/brand/logo-480.png" alt="Yorum Kazanı" width="220" height="150">
+      <h1>Fotoğrafını at, millet yorumlasın.</h1>
+      <p>Kombin, ev, yemek, mesaj ya da garip bir tabela.<br>Kazana at, en komik yorum kazansın.</p>
+      <button class="btn btn-red" data-open-upload>Kazana at</button>
+      <small>Bir <a href="https://asparajans.com" rel="noopener">asparajans</a> projesi.</small>
     </div>
-  </header>
-
-  <main class="wrap">
-    <section class="hero">
-      <h1>Fotoğrafını at, <em>millet yorumlasın.</em></h1>
-      <p>Kombin, ev, yemek, mesaj, garip tabela... Kazana at, en iyi yorum kazansın.</p>
-    </section>
-
-    <nav class="tabs" aria-label="Sıralama">
-      <button class="tab" data-sort="new" aria-pressed="true">Yeni</button>
-      <button class="tab" data-sort="hot" aria-pressed="false">Kaynayanlar</button>
-    </nav>
-
-    <div class="grid" id="feed"></div>
-    <div class="empty" id="empty" hidden>
-      <strong>Kazan henüz boş</strong>
-      İlk fotoğrafı sen at, ilk yorumlar senin olsun.
-    </div>
-    <button class="btn btn-ghost more" id="more" hidden>Daha fazla</button>
   </main>
-
-  <footer class="foot">
-    Burada şeylere gülüyoruz, insanlara değil. Kurallara uymayan içerikleri bildir.<br>
-    Bir <a href="https://asparajans.com" rel="noopener">asparajans</a> projesi.
-  </footer>
-
-  <button class="btn btn-red fab" data-open-upload>+ Kazana at</button>
 
   <!-- upload sheet -->
   <div class="sheet-bg" id="sheet" hidden>
@@ -70,19 +51,6 @@
       </label>
 
       <div class="field">
-        <label>Bu ne?</label>
-        <div class="chips" id="chips">
-          <button type="button" class="chip" data-cat="kombin" aria-pressed="true">Kombin</button>
-          <button type="button" class="chip" data-cat="ev" aria-pressed="false">Ev</button>
-          <button type="button" class="chip" data-cat="yemek" aria-pressed="false">Yemek</button>
-          <button type="button" class="chip" data-cat="mesaj" aria-pressed="false">Mesaj</button>
-          <button type="button" class="chip" data-cat="tabela" aria-pressed="false">Tabela</button>
-          <button type="button" class="chip" data-cat="dugun" aria-pressed="false">Düğün</button>
-          <button type="button" class="chip" data-cat="diger" aria-pressed="false">Diğer</button>
-        </div>
-      </div>
-
-      <div class="field">
         <label for="question">Millete ne soruyorsun? <span class="hint">(isteğe bağlı)</span></label>
         <input id="question" maxlength="120" placeholder="Örn: Bu kombinle düğüne gidilir mi?">
       </div>
@@ -92,10 +60,7 @@
         <input id="nick" maxlength="24" placeholder="Anonim" autocomplete="nickname">
       </div>
 
-      <div class="rules">
-        <b>Kurallar:</b> Çocuk fotoğrafı yok. Başkasının yüzü, adı, telefonu, plakası yok. Çıplaklık, şiddet, reklam yok.
-        Mesaj ekran görüntülerinde isim ve numaraları kapat. Fotoğrafın konum bilgisi otomatik silinir.
-      </div>
+      <p class="hint" style="margin-top:12px">Çocuk, çıplaklık, kimlik, plaka, telefon numarası yok. Konum bilgisi otomatik silinir.</p>
 
       <div class="ts" id="uploadTs"></div>
       <p class="error" id="uploadError" hidden></p>
