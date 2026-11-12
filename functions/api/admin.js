@@ -2,10 +2,11 @@
 // POST /api/admin  { type, id, action: "approve"|"hide"|"delete" }
 // Requires header  Authorization: Bearer <ADMIN_TOKEN>
 
-import { json, fail, isAdmin, publicPost, deletePost, purgeStale } from "../../lib/server.js";
+import { json, fail, isAdmin, publicPost, deletePost, purgeStale, ensureSchema } from "../../lib/server.js";
 
 export async function onRequestGet({ request, env }) {
   if (!isAdmin(request, env)) return fail("Yetkisiz.", 401, "unauthorized");
+  await ensureSchema(env);
   await purgeStale(env);
 
   const { results: posts } = await env.DB.prepare(
@@ -31,7 +32,7 @@ export async function onRequestGet({ request, env }) {
             (SELECT COUNT(*) FROM comments WHERE created_at > ?) AS comments_24h`
   ).bind(Date.now() - 864e5, Date.now() - 864e5).first();
 
-  const mapPost = (p) => ({ ...publicPost(p), reportCount: p.report_count });
+  const mapPost = (p) => ({ ...publicPost(p), reportCount: p.report_count, modNote: p.mod_note || "" });
   const mapComment = (c) => ({
     id: c.id, postId: c.post_id, postQuestion: c.post_question, nick: c.nick, body: c.body,
     status: c.status, score: c.score, reportCount: c.report_count, createdAt: c.created_at,

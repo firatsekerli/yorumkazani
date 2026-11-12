@@ -2,7 +2,7 @@
 // POST /api/posts  (multipart: image, category, question, nick, token)   upload a photo
 
 import {
-  CATEGORIES, LIMITS, json, fail, visitor, withCookie, human, takeRate, clean, blocked, newId, checkPhoto, toBase64, publicPost, listPosts, purgeStale,
+  CATEGORIES, LIMITS, json, fail, visitor, withCookie, human, takeRate, clean, blocked, newId, checkPhoto, toBase64, publicPost, listPosts, purgeStale, ensureSchema,
 } from "../../../lib/server.js";
 
 const PAGE = 24;
@@ -53,21 +53,23 @@ export async function onRequestPost({ request, env, waitUntil }) {
   if (head[0] !== 0xff || head[1] !== 0xd8 || head[2] !== 0xff) return done(fail("Fotoğraf okunamadı."));
 
   const mode = env.MODERATION || (env.ANTHROPIC_API_KEY ? "ai" : "manual");
-  let status = "live";
+  let status = "live", note = "";
   if (mode === "manual") status = "pending";
   if (mode === "ai") {
     const check = await checkPhoto(env, toBase64(buf));
     if (check.decision === "reject") return done(fail(check.reason, 422, "rejected"));
     status = check.decision; // live or pending
+    if (status === "pending") note = check.why ? `AI emin değil: ${check.why}` : "AI kontrolü yapılamadı";
   }
 
+  await ensureSchema(env);
   const id = newId();
   const now = Date.now();
   await env.IMAGES.put(`p/${id}.jpg`, buf); // Workers KV
   await env.DB.prepare(
-    `INSERT INTO posts (id, created_at, author_hash, nick, category, question, image_key, width, height, status, last_activity)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-  ).bind(id, now, v.hash, nick, category, question, `p/${id}.jpg`, width, height, status, now).run();
+    `INSERT INTO posts (id, created_at, author_hash, nick, category, question, image_key, width, height, status, last_activity, mod_note)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(id, now, v.hash, nick, category, question, `p/${id}.jpg`, width, height, status, now, note.slice(0, 200)).run();
 
   waitUntil(purgeStale(env).catch(() => {}));
   return done(json({ ok: true, id, status }));

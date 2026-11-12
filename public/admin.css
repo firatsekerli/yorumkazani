@@ -68,3 +68,4 @@
 .confirm-q { font-weight: 900; font-size: 14px; color: var(--red-dark); text-align: center; }
 .confirm-btns { display: flex; gap: 6px; }
 .confirm-btns .btn { flex: 1; padding: 7px 8px; font-size: 13px; white-space: nowrap; }
+.mod-note { display: inline-block; margin: 2px 0 4px; padding: 3px 9px; border-radius: 8px; background: #fff3cd; color: #8a6100; font-size: 13px; font-weight: 800; }

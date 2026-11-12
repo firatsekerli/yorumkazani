@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS posts (
   status        TEXT NOT NULL DEFAULT 'live', -- live | pending | hidden
   comment_count INTEGER NOT NULL DEFAULT 0,
   report_count  INTEGER NOT NULL DEFAULT 0,
-  last_activity INTEGER NOT NULL
+  last_activity INTEGER NOT NULL,
+  mod_note      TEXT NOT NULL DEFAULT ''     -- why the AI held it for review
 );
 CREATE INDEX IF NOT EXISTS posts_new ON posts (status, created_at DESC);
 CREATE INDEX IF NOT EXISTS posts_active ON posts (status, last_activity DESC);

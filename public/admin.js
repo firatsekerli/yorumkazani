@@ -53,6 +53,7 @@ function postRow(p) {
     el("div", {},
       el("div", {}, tag(p.status), p.reportCount ? el("span", { class: "tag reports" }, `${p.reportCount} bildirim`) : null),
       el("h3", {}, p.question || "(soru yok)"),
+      p.modNote ? el("div", { class: "mod-note" }, p.modNote) : null,
       el("div", { class: "sub" }, `${p.nick} · ${timeAgo(p.createdAt)} · ${p.commentCount} yorum · `, el("a", { href: `/p/${p.id}`, target: "_blank" }, "sayfayı aç"))),
     el("div", { class: "actions-col" }, ...postButtons(p)));
 }
