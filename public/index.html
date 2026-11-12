@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yorum Kazanı · Kazana at, teyzeler yorumlasın</title>
+  <meta name="description" content="Fotoğrafını kazana at, Nermin Teyze, Taksici Recep Abi, kayınvalide Şükran Hanım, Plaza Kaan ve sözlük yazarı yorumlasın. Hikayende paylaş.">
+  <meta property="og:title" content="Yorum Kazanı · Kazana at, teyzeler yorumlasın">
+  <meta property="og:description" content="Kombinini, evini, yemeğini kazana at. Bakalım teyzeler ne diyecek?">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#2b1d14">
+  <!-- Turnstile site key (public). Replace with your own key from the Cloudflare dashboard. -->
+  <meta name="turnstile-sitekey" content="1x00000000000000000000AA">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="56" height="56"><use href="#cauldron"/></svg>
+      </div>
+      <h1>Yorum Kazanı</h1>
+      <p class="tagline">Kazana at, teyzeler yorumlasın.</p>
+    </header>
+
+    <section class="card" id="step-upload">
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept="image/jpeg,image/png,image/webp" hidden>
+        <img id="preview" alt="" hidden>
+        <span class="drop-empty" id="dropEmpty">
+          <strong>Fotoğraf seç</strong>
+          <small>Kombin, ev, yemek, mesaj, CV... ne varsa.</small>
+        </span>
+      </label>
+
+      <p class="label">Bu ne?</p>
+      <div class="chips" id="chips" role="radiogroup" aria-label="Kategori">
+        <button type="button" class="chip" data-cat="kombin" aria-pressed="true">Kombin</button>
+        <button type="button" class="chip" data-cat="ev">Ev</button>
+        <button type="button" class="chip" data-cat="yemek">Yemek</button>
+        <button type="button" class="chip" data-cat="mesaj">Mesaj</button>
+        <button type="button" class="chip" data-cat="cv">CV</button>
+        <button type="button" class="chip" data-cat="dugun">Düğün</button>
+        <button type="button" class="chip" data-cat="diger">Diğer</button>
+      </div>
+
+      <div id="turnstile" class="ts"></div>
+
+      <button class="throw" id="throwBtn" disabled>Kazana at!</button>
+      <p class="fine">Fotoğrafın saklanmaz, sadece yorum için kullanılır. Günde birkaç atış ücretsiz.</p>
+    </section>
+
+    <section class="boiling" id="boiling" hidden aria-live="polite">
+      <svg viewBox="0 0 64 64" class="pot" aria-hidden="true"><use href="#cauldron"/></svg>
+      <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <p id="boilText">Kazan kaynıyor...</p>
+    </section>
+
+    <section id="result" hidden>
+      <h2 class="result-title" id="resultTitle"></h2>
+      <ul class="comments" id="comments"></ul>
+      <div class="actions">
+        <button class="throw" id="shareBtn">Hikayende paylaş</button>
+        <button class="ghost" id="againBtn">Yeni bir şey at</button>
+      </div>
+      <p class="fine" id="remaining"></p>
+    </section>
+
+    <p class="error" id="error" role="alert" hidden></p>
+
+    <footer class="foot">
+      Yorum Kazanı bir eğlence sitesidir; yorumlar yapay zekâ ile üretilir.<br>
+      Bir <a href="https://asparajans.com" rel="noopener">asparajans</a> projesi.
+    </footer>
+  </main>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="cauldron" viewBox="0 0 64 64">
+      <ellipse cx="32" cy="22" rx="24" ry="6" fill="#7bd389"/>
+      <path d="M8 22c0 18 9 30 24 30s24-12 24-30" fill="#3a2a20" stroke="#1d140e" stroke-width="2"/>
+      <ellipse cx="32" cy="22" rx="24" ry="6" fill="none" stroke="#1d140e" stroke-width="2"/>
+      <circle cx="24" cy="18" r="3" fill="#b8f0c2"/><circle cx="38" cy="16" r="2.2" fill="#b8f0c2"/><circle cx="31" cy="12" r="1.6" fill="#b8f0c2"/>
+      <path d="M16 52l-4 6M48 52l4 6" stroke="#1d140e" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+  </svg>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
