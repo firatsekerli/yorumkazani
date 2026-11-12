@@ -62,3 +62,9 @@
   .admin-tab { font-size: 14px; padding: 10px 10px; }
   .stat-card b { font-size: 24px; }
 }
+
+/* delete confirmation row */
+.tile-actions.confirming, .actions-col.confirming { display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
+.confirm-q { font-weight: 900; font-size: 14px; color: var(--red-dark); text-align: center; }
+.confirm-btns { display: flex; gap: 6px; }
+.confirm-btns .btn { flex: 1; padding: 7px 8px; font-size: 13px; white-space: nowrap; }

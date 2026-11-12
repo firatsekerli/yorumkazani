@@ -95,14 +95,20 @@ function actionBtn(label, type, id, action, cls) {
   return el("button", { class: `btn ${cls}`, onclick: () => act(type, id, action) }, label);
 }
 
-// Two-step delete: first click arms the button, second click within 3 s deletes.
+// Two-step delete: "Sil" swaps the action buttons for a small "Silinsin mi?" confirm row.
 function deleteBtn(type, id) {
   const b = el("button", { class: "btn btn-danger" }, "Sil");
-  let timer;
   b.addEventListener("click", () => {
-    if (b.classList.contains("armed")) { clearTimeout(timer); act(type, id, "delete"); return; }
-    b.classList.add("armed"); b.textContent = "Emin misin?";
-    timer = setTimeout(() => { b.classList.remove("armed"); b.textContent = "Sil"; }, 3000);
+    const box = b.closest(".tile-actions, .actions-col");
+    const original = [...box.childNodes];
+    const restore = () => { clearTimeout(timer); box.classList.remove("confirming"); box.replaceChildren(...original); };
+    box.classList.add("confirming");
+    box.replaceChildren(
+      el("span", { class: "confirm-q" }, "Silinsin mi?"),
+      el("div", { class: "confirm-btns" },
+        el("button", { class: "btn btn-ghost", onclick: restore }, "Vazgeç"),
+        el("button", { class: "btn btn-danger armed", onclick: () => { clearTimeout(timer); act(type, id, "delete"); } }, "Evet, sil")));
+    const timer = setTimeout(restore, 6000);
   });
   return b;
 }
