@@ -27,7 +27,7 @@ function render() {
   if (params.has("yeni")) note("Kazana attın! Linki arkadaşlarına gönder, yorumlar gelsin.");
 
   $("#commentsSection").hidden = false;
-  $("#cnick").value = getNick();
+  // The nickname field starts empty each time.
   if (!ts) ts = turnstile("#commentTs");
   renderComments();
   loadNext();

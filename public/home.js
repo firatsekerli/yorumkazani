@@ -2,7 +2,7 @@ import { $, api, el, getNick, setNick, turnstile, prepareImage, timeAgo } from "
 
 let photo = null;
 const ts = turnstile("#uploadTs");
-$("#nick").value = getNick();
+// The nickname field starts empty; the placeholder shows "Anonim".
 
 $("#file").addEventListener("change", async (e) => {
   const f = e.target.files && e.target.files[0];

@@ -13,12 +13,12 @@ export function postJSON(path, body) {
   return api(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 }
 
-// ---------- nickname (kept on this device) ----------
-export function getNick() {
-  try { return localStorage.getItem("yk_nick") || ""; } catch { return ""; }
-}
-export function setNick(n) {
-  try { localStorage.setItem("yk_nick", n); } catch {}
+// ---------- nickname ----------
+// Nicknames are no longer remembered: the fields start empty with a placeholder.
+// setNick() also clears any nickname saved by older versions of the site.
+export function getNick() { return ""; }
+export function setNick() {
+  try { localStorage.removeItem("yk_nick"); } catch {}
 }
 
 // ---------- Turnstile ----------
